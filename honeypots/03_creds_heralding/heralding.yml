@@ -1,0 +1,80 @@
+# Heralding Configuration - Credential Capture Honeypot
+# Captures login attempts across multiple protocols
+
+general:
+  # Bind address
+  bind: 0.0.0.0
+  # Protocol-specific connection limits per IP
+  max_connections: 10
+  # Connection timeout in seconds
+  timeout: 60
+  # Log file for captured credentials
+  logfile: ../logs/creds/heralding.log
+  # Log all captured credentials in CSV format
+  csv_logfile: ../logs/creds/captured_creds.csv
+  # Log all connection attempts in JSON
+  json_logfile: ../logs/creds/connections.json
+  # Also log to stdout
+  log_stdout: true
+
+# Protocol configurations
+protocols:
+  ftp:
+    enabled: true
+    port: 21
+    banner: "220 Welcome to FTP server\r\n"
+    # Capture downloaded files
+    download_dir: ../logs/creds/ftp_downloads
+
+  telnet:
+    enabled: true
+    port: 2323
+    banner: "\r\nUbuntu 22.04 LTS\r\nlogin: "
+
+  http:
+    enabled: true
+    port: 8080
+    # Fake login page
+    login_page: |
+      <html><body>
+      <h2>Login Required</h2>
+      <form method="POST">
+      <input type="text" name="username" placeholder="Username">
+      <input type="password" name="password" placeholder="Password">
+      <input type="submit" value="Login">
+      </form></body></html>
+    # Paths that return the login page
+    login_paths:
+      - /
+      - /login
+      - /admin
+      - /wp-admin
+      - /manager
+
+  pop3:
+    enabled: true
+    port: 110
+    banner: "+OK POP3 server ready\r\n"
+
+  imap:
+    enabled: true
+    port: 143
+    banner: "* OK IMAP4 server ready\r\n"
+
+  smtp:
+    enabled: true
+    port: 25
+    banner: "220 mail.example.com ESMTP Postfix\r\n"
+
+  mysql:
+    enabled: true
+    port: 3306
+    banner_type: mysql
+
+  ssh:
+    enabled: true
+    port: 2223
+    # SSH key size
+    key_size: 2048
+    # Banner to show
+    banner: "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6"

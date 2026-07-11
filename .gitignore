@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Honeypot runtime
+*.pid
+*.log
+.honeypot_pids
+
+# Logs (keep structure, ignore contents)
+logs/**/*.log
+logs/**/*.json
+logs/**/*.jsonl
+logs/**/*.csv
+logs/**/captured_files/*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store

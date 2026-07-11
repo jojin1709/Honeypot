@@ -1,0 +1,23 @@
+# ============================================================
+# Honeypot Lab - Python Dependencies
+# ============================================================
+# Core honeypots
+cowrie>=2.0.0                    # SSH/Telnet honeypot
+conpot>=0.6.0                    # ICS/SCADA honeypot
+heralding>=1.0.0                 # Credential capture honeypot
+
+# Web framework (dashboard + web traps)
+flask>=3.0.0
+flask-socketio>=5.0.0            # Real-time log updates
+
+# Networking
+twisted>=24.0.0                  # Async networking (used by Cowrie/Heralding)
+paramiko>=3.0.0                  # SSH client for testing
+requests>=2.30.0                 # HTTP client for testing
+scapy>=2.5.0                     # Packet manipulation for scanning tools
+
+# Utilities
+pyyaml>=6.0                      # Config parsing
+colorama>=0.4.0                  # Colored terminal output
+python-dotenv>=1.0.0             # Environment config
+psutil>=5.9.0                    # Process management

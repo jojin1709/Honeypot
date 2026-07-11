@@ -1,0 +1,54 @@
+<conpot>
+    <general>
+        <sensor_name>ics_honeypot_01</sensor_name>
+        <loglevel>INFO</loglevel>
+        <logfile>../logs/ics/conpot.log</logfile>
+        <logdir>../logs/ics</logdir>
+    </general>
+
+    <!-- Modbus TCP - Most commonly scanned ICS protocol -->
+    <modbus>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>502</port>
+        <!-- Emulate a Siemens S7-1200 PLC -->
+        <slave_id>1</slave_id>
+        <unit_id>1</unit_id>
+    </modbus>
+
+    <!-- Siemens S7 - Industrial automation -->
+    <s7comm>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>102</port>
+    </s7comm>
+
+    <!-- BACnet - Building automation -->
+    <bacnet>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>47808</port>
+    </bacnet>
+
+    <!-- HTTP management interface simulation -->
+    <http>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>8000</port>
+        <content>../logs/ics/http_content</content>
+    </http>
+
+    <!-- IPMI - Server management -->
+    <ipmi>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>623</port>
+    </ipmi>
+
+    <!-- Kamstrup - Energy metering -->
+    <kamstrup>
+        <enabled>true</enabled>
+        <address>0.0.0.0</address>
+        <port>1025</port>
+    </kamstrup>
+</conpot>
