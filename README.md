@@ -92,6 +92,12 @@ A **honeypot lab** sets up **fake services** that look real to attackers. When s
 | 16 | **SNMP Trap** | 🌐 | SNMP | 161 | Network device scanning, community string brute force |
 | 17 | **NTP Trap** | 🕐 | NTP | 123 | NTP amplification DDoS probes |
 
+> **Implementation note:** Only the SSH/Telnet honeypot (#1) runs on the
+> third-party [Cowrie](https://github.com/cowrie/cowrie) engine. All other 16
+> honeypots are custom, dependency-free Python socket servers built for this
+> lab — no `conpot` or `heralding` packages required, and they run identically
+> on Windows and Linux.
+
 ---
 
 ## ⚡ Features
@@ -151,9 +157,6 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Install native C builds (optional, works without)
-pip install conpot heralding 2>/dev/null
-
 # 3. Start all 17 honeypots
 python3 start_all.py
 
@@ -186,7 +189,14 @@ http://127.0.0.1:5000
 - **Recent activity tables** — last 15 events per honeypot
 - **Total events + unique IPs** — at a glance
 - **Auto-refresh** — every 5 seconds
-- **API endpoints** — `/api/stats`, `/api/logs/<type>`, `/api/heatmap`
+
+### API Endpoints
+| Endpoint | Returns |
+|---|---|
+| `GET /api/stats` | Live event counts per honeypot + unique attacker IPs |
+| `GET /api/logs/<type>?n=20` | Last `n` (max 100) log entries for a honeypot type |
+| `GET /heatmap` | Hourly/daily activity heatmap data (JSON) |
+| `GET /correlation` | Attackers seen hitting multiple honeypots (JSON) |
 
 ---
 
@@ -365,6 +375,31 @@ bind_host = 127.0.0.1
 # VM (recommended): VirtualBox/VMware with NAT
 # Cloud (expert): DigitalOcean/AWS — real internet traffic
 ```
+
+---
+
+## 🪟 Windows-Specific Notes
+
+This lab is fully tested on Windows (Python 3.14). A few Windows quirks are
+already handled automatically, but worth knowing about:
+
+- **Console encoding:** All scripts force UTF-8 stdout/stderr on startup so
+  the emoji-laden banners don't crash on the default `cp1252` console.
+- **Cowrie on Windows:** Cowrie's own CLI (`cowrie start`) doesn't work on
+  Windows because it passes a POSIX-only `--umask` flag to `twistd` and relies
+  on `os.execvp`, which needs `twistd` resolvable via `PATH`. `start_all.py`
+  works around this by invoking `twistd` directly with the venv's `Scripts/`
+  folder added to `PATH` for that subprocess. Cowrie also expects its config
+  at `./etc/cowrie.cfg` (not a flat `cowrie.cfg`); this is synced
+  automatically from `honeypots/01_ssh_cowrie/cowrie.cfg` on every start, so
+  `config.ini`'s `ssh_port` stays the single source of truth.
+- **Stopping honeypots:** `os.kill(pid, SIGTERM)` can occasionally fail with
+  `WinError 87` on some Windows/Python builds even when it works fine 99% of
+  the time. `stop_all.py` always follows up with a `taskkill`-based sweep, so
+  everything still gets stopped even if you see an informational message
+  instead of a green checkmark for a given honeypot.
+- **Admin/Administrator:** only needed if you set `ssh_port`, `dns_port` (53),
+  etc. to a privileged port (< 1024). The default config avoids this.
 
 ---
 

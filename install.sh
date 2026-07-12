@@ -21,8 +21,6 @@ source venv/bin/activate
 # Install deps
 echo "📥 Installing Python packages..."
 pip install -r requirements.txt
-# Native C builds work on Linux
-pip install conpot heralding 2>/dev/null || echo "⚠️  conpot/heralding optional"
 
 echo ""
 echo "✅ Install complete!"
