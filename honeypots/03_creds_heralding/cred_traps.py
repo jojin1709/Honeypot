@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Custom Credential Capture Honeypot (Cross-platform replacement for Heralding)
 Captures login attempts across FTP, Telnet, HTTP, SMTP, POP3, IMAP, MySQL, SSH.
@@ -19,7 +28,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 CSV_HEADER = "timestamp,protocol,source_ip,source_port,username,password,details\n"
 CSV_FILE = os.path.join(LOG_DIR, "captured_creds.csv")
 if not os.path.exists(CSV_FILE):
-    with open(CSV_FILE, "w") as f:
+    with open(CSV_FILE, "w", encoding="utf-8") as f:
         f.write(CSV_HEADER)
 
 CRED_LOGS = []

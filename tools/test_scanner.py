@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Red Team: Honeypot Lab Scanner
 Scan your own honeypots to test they're working.
@@ -232,7 +241,7 @@ def main():
                    "  2) Full attack simulation (port scan + web + SSH + DB + ICS + RDP)\n"
                    "  3) Web attacks only\n"
                    "  4) ICS/SCADA probes only\n"
-                   "  Choice [1-4]: ")
+                   "  Choice [1-4]: ").strip()
 
     if choice == "1":
         scan_all()

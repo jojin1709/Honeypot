@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Custom ICS/SCADA Honeypot (Cross-platform replacement for Conpot)
 Emulates Modbus, Siemens S7, BACnet, and other industrial protocols.
@@ -36,7 +45,7 @@ class ICSLogger:
         }
 
         log_file = os.path.join(LOG_DIR, f"{protocol.lower()}_probes.jsonl")
-        with open(log_file, "a") as f:
+        with open(log_file, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
 
         print(f"  🏭 {protocol:<8} | {timestamp[:19]} | {client_ip:>15}:{client_port}")

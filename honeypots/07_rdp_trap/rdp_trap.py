@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 RDP Honeypot Trap
 Logs RDP connection attempts and extracts client info.
@@ -61,16 +70,16 @@ class RDPTrap:
 
             # Log to file
             log_file = os.path.join(LOG_DIR, "rdp_attempts.jsonl")
-            with open(log_file, "a") as f:
+            with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
 
             # Also log to CSV for easy analysis
             csv_file = os.path.join(LOG_DIR, "rdp_attempts.csv")
             if not os.path.exists(csv_file):
-                with open(csv_file, "w") as f:
+                with open(csv_file, "w", encoding="utf-8") as f:
                     f.write("timestamp,source_ip,source_port,data_length,requested_protocols,client_name\n")
 
-            with open(csv_file, "a") as f:
+            with open(csv_file, "a", encoding="utf-8") as f:
                 f.write(f"{timestamp},{client_ip},{addr[1]},{len(data)},"
                        f"{rdp_info.get('requested_protocols', 'unknown')},"
                        f"{rdp_info.get('client_name', 'unknown')}\n")

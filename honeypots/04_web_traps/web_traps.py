@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Web Honeypot Traps
 Fake WordPress, admin panels, and API endpoints that log all attacks.

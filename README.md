@@ -1,7 +1,9 @@
-# 🍯 Honeypot Lab — Cybersecurity Attack & Defense Laboratory
+# 🍯 Honeypot Lab v2.0 — Cybersecurity Attack & Defense Laboratory
 
-> **A comprehensive honeypot laboratory for cybersecurity enthusiasts, SOC analysts, penetration testers, and CTF players.**
-> Captures real attacker behavior, logs credential theft, collects malware samples, and lets you practice **Red vs Blue** — all in Python.
+> **17 honeypot types · 13+ analysis features · Red vs Blue tools · Web dashboard**
+> **Developed by JOJIN JOHN**
+
+A comprehensive honeypot laboratory for cybersecurity enthusiasts, SOC analysts, penetration testers, CTF players, and malware researchers. Captures real attacker behavior across 17 protocols, with GeoIP tracking, attack correlation, live dashboard, and notification alerts. Runs on **Windows** and **Kali/Linux** — no Docker required.
 
 ---
 
@@ -9,47 +11,47 @@
 
 - [What Is This?](#-what-is-this)
 - [Who Uses This?](#-who-uses-this)
-- [Honeypot Types (7)](#-honeypot-types-7)
-- [Quick Start](#-quick-start)
-  - [Windows Setup](#windows)
-  - [Kali / Linux Setup](#kali--linux)
+- [17 Honeypot Types](#-17-honeypot-types)
+- [Features](#-features)
+- [Quick Start — Windows](#windows)
+- [Quick Start — Kali / Linux](#kali--linux)
 - [How To Use](#-how-to-use)
 - [Dashboard (Web UI)](#-dashboard-web-ui)
-- [Red Team Tools (Attack Yourself)](#-red-team--attack-your-own-lab)
-- [Blue Team Tools (Analyze Attacks)](#-blue-team--analyze-the-attacks)
+- [Notification Setup](#-notification-setup)
+- [Red Team Tools](#-red-team--attack-your-own-lab)
+- [Blue Team Tools](#-blue-team--analyze-the-attacks)
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
-- [Learning Path](#-learning-path)
+- [Learning Path (Beginner→Expert)](#-learning-path)
 - [Security Warnings](#-security-warnings)
 - [Troubleshooting](#-troubleshooting)
-- [License](#-license)
 
 ---
 
 ## 🎯 What Is This?
 
-A **honeypot lab** is a cybersecurity training environment where you set up **fake services** (SSH, web servers, databases, industrial systems, etc.) that look real to attackers. When someone (or an automated scanner) connects to them:
+A **honeypot lab** sets up **fake services** that look real to attackers. When someone connects:
 
-- ✅ Their **IP address** is logged
+- ✅ Their **IP** is logged with GeoIP location (country/city/ISP)
 - ✅ Their **commands** are recorded
 - ✅ Any **credentials they try** are captured
-- ✅ Any **malware they upload** is saved
-- ✅ You can **analyze all of it** to learn attacker techniques
+- ✅ Any **malware they upload** is saved and hashed
+- ✅ You get **notifications** via Telegram/Discord/Slack/Email
+- ✅ You can **analyze and correlate** everything in the dashboard
 
-This lab runs **entirely in Python** — no Docker, no VMs, no complex setup. It works on **Windows 10/11**, **Kali Linux**, **Ubuntu**, **Debian**, and any system with Python 3.10+.
-
-### 🧠 What You Can Learn
+### What You Can Learn
 
 | Skill | How This Lab Helps |
 |-------|-------------------|
 | **Threat Intelligence** | See what real attackers/scanners do in real-time |
 | **Incident Response** | Practice detecting and analyzing intrusions |
-| **Malware Analysis** | Capture malware samples and analyze them |
+| **Malware Analysis** | Capture malware samples, analyze them |
 | **Red Teaming** | Attack your own lab without legal risk |
 | **Blue Teaming** | Build detection rules from log patterns |
-| **Network Security** | Understand scanning, brute force, and exploitation |
-| **ICS/SCADA Security** | Learn industrial control system attack patterns |
-| **Forensics** | Trace attacker activity across multiple services |
+| **Network Security** | Understand scanning, brute force, exploitation |
+| **ICS/SCADA Security** | Learn Modbus/S7/BACnet attack patterns |
+| **IoT Security** | See Mirai/botnet scanning Telnet, MQTT |
+| **Forensics** | Trace attacker activity across 17 services |
 
 ---
 
@@ -57,28 +59,55 @@ This lab runs **entirely in Python** — no Docker, no VMs, no complex setup. It
 
 | Role | How They Use It |
 |------|----------------|
-| 🎓 **Cybersecurity Students** | Practice hands-on attack & defense in a safe environment |
-| 🔴 **Penetration Testers** | Test attack tools against known honeypot signatures |
-| 🔵 **SOC Analysts** | Build detection rules and practice incident response |
+| 🎓 **Cybersecurity Students** | Practice hands-on attack & defense safely |
+| 🔴 **Penetration Testers** | Test attack tools against honeypot signatures |
+| 🔵 **SOC Analysts** | Build detection rules, practice incident response |
 | 🏭 **ICS Security Engineers** | Learn Modbus/S7/BACnet attack patterns |
 | 🏴‍☠️ **CTF Players** | Train for Red vs Blue challenges |
-| 🔬 **Malware Researchers** | Capture malware droppers and analyze them |
-| 🧪 **IT Students** | Understand how attackers find and exploit services |
-| 📊 **Threat Intelligence Analysts** | Collect data on scanning campaigns and botnets |
+| 🔬 **Malware Researchers** | Capture malware droppers, analyze them |
+| 📊 **Threat Intel Analysts** | Collect data on scanning campaigns |
+| 🧪 **IT/Network Students** | Understand how attackers find services |
 
 ---
 
-## 🏗️ Honeypot Types (7)
+## 🏗️ 17 Honeypot Types
 
-| # | Type | What It Emulates | Port(s) | What Gets Captured |
-|---|------|-----------------|---------|-------------------|
-| 1 | 🐚 **SSH/Telnet** | Fake Linux server | `2222` | Attacker commands, brute force attempts, malware downloads |
-| 2 | 🏭 **ICS/SCADA** | Siemens PLC, Modbus, BACnet | `502`, `102`, `47808` | Industrial control system probes, Shodan scans |
-| 3 | 🔑 **Credential Capture** | FTP, SMTP, POP3, HTTP login | `21`, `25`, `110`, `8080`, `3306` | Usernames & passwords attackers try |
-| 4 | 🌐 **Web Traps** | WordPress, phpMyAdmin, API | `80`, `8081`, `8082` | Web attacks, SQLi probes, admin scans |
-| 5 | 🗄️ **Database Traps** | Elasticsearch, MongoDB | `9200`, `27017` | Database exploitation attempts, NoSQL probes |
-| 6 | 🦠 **Malware Capture** | Vulnerable web app + TFTP | `8888`, `69` | Malware uploads, Webshell attempts, exploit kits |
-| 7 | 🖥️ **RDP Trap** | Windows Remote Desktop | `3389` | RDP brute force attempts, client info |
+| # | Type | Icon | Protocol(s) | Port(s) | What Gets Captured |
+|---|------|------|-------------|---------|-------------------|
+| 1 | **SSH/Telnet** | 🐚 | SSH, Telnet | 2222 | Attacker commands, brute force, malware downloads |
+| 2 | **ICS/SCADA** | 🏭 | Modbus, S7, BACnet | 502, 102, 47808 | Industrial control system probes |
+| 3 | **Credential Capture** | 🔑 | FTP, SMTP, POP3, HTTP, MySQL | 21, 25, 110, 8080, 3306 | Usernames & passwords attackers try |
+| 4 | **Web Traps** | 🌐 | HTTP/HTTPS | 80, 8081, 8082 | WordPress scans, admin login attempts, API probes |
+| 5 | **Database Traps** | 🗄️ | Elasticsearch, MongoDB | 9200, 27017 | DB exploitation attempts, NoSQL probes |
+| 6 | **Malware Capture** | 🦠 | HTTP, TFTP | 8888, 69 | Malware uploads, webshell attempts, exploit kits |
+| 7 | **RDP Trap** | 🖥️ | RDP | 3389 | RDP brute force, client info extraction |
+| 8 | **SMB Trap** | 📁 | SMB/CIFS | 445 | EternalBlue, WannaCry, SMB enumeration |
+| 9 | **DNS Trap** | 🌐 | DNS | 53 | DNS tunneling, amplification queries |
+| 10 | **SIP Trap** | 📞 | SIP/VoIP | 5060 | SIP scanning, registration, call invites |
+| 11 | **Redis Trap** | 🔴 | Redis | 6379 | Unsecured Redis probes, key enumeration |
+| 12 | **VNC Trap** | 🖥️ | VNC/RFB | 5900 | VNC scanning, remote desktop attacks |
+| 13 | **Telnet Trap** | 📟 | Telnet | 23 | IoT/Mirai botnet scanning |
+| 14 | **Memcached Trap** | 📦 | Memcached | 11211 | DDoS amplification probes |
+| 15 | **MQTT Trap** | 📡 | MQTT | 1883 | IoT protocol attacks |
+| 16 | **SNMP Trap** | 🌐 | SNMP | 161 | Network device scanning, community string brute force |
+| 17 | **NTP Trap** | 🕐 | NTP | 123 | NTP amplification DDoS probes |
+
+---
+
+## ⚡ Features
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 📊 **Live Dashboard** | Web UI with auto-refresh — see attacks in real-time | ✅ Built-in |
+| 🌍 **GeoIP Tracking** | Resolves attacker IPs to country/city/ISP | ✅ Built-in |
+| 🔗 **Attack Correlation** | Links the same attacker across multiple services | ✅ Built-in |
+| 🔥 **Activity Heatmap** | Visual timeline of attacks by hour/day | ✅ Built-in |
+| 🔔 **Notifications** | Alerts via Telegram, Discord, Slack, or Email | ✅ Configurable |
+| 📦 **Log Rotation** | Auto-archives logs, prevents disk full | ✅ Built-in |
+| 🎯 **Red Team Tools** | Port scanner, brute forcer, full attack simulator | ✅ Built-in |
+| 📈 **Blue Team Tools** | Log analyzer, threat report generator | ✅ Built-in |
+| 🌐 **REST API** | JSON endpoints for all stats and logs | ✅ Built-in |
+| 🖥️ **Cross-Platform** | Windows + Kali/Linux — same codebase | ✅ Verified |
 
 ---
 
@@ -87,30 +116,27 @@ This lab runs **entirely in Python** — no Docker, no VMs, no complex setup. It
 ### Windows
 
 ```powershell
-# 1. Open PowerShell or CMD as Administrator (for ports < 1024)
-#    Otherwise, higher ports work without admin
+# 1. Open PowerShell as Administrator (for ports < 1024)
 
-# 2. Go to the lab directory
+# 2. Navigate to lab
 cd D:\honey pot
 
-# 3. Create & activate virtual environment
+# 3. Install
 python -m venv venv
 venv\Scripts\activate
-
-# 4. Install dependencies
 pip install -r requirements.txt
 
-# 5. Start ALL honeypots
+# 4. Start all 17 honeypots
 python start_all.py
 
-# 6. Open the LIVE dashboard in your browser
+# 5. Open dashboard
 python dashboard.py
-# → Open http://127.0.0.1:5000
+# → Browser: http://127.0.0.1:5000
 
-# 7. In a second terminal, test your lab
+# 6. Test your lab (in new terminal)
 python tools\test_scanner.py
 
-# 8. Stop everything when done
+# 7. Stop everything
 python stop_all.py
 ```
 
@@ -120,97 +146,81 @@ python stop_all.py
 # 1. Open terminal
 cd /path/to/honey-pot
 
-# 2. Create & activate virtual environment
+# 2. Install
 python3 -m venv venv
 source venv/bin/activate
-
-# 3. Install ALL dependencies (includes cowrie on Linux)
 pip install -r requirements.txt
 
-# Optional: install conpot & heralding on Linux (native C build works)
-pip install conpot heralding
+# Install native C builds (optional, works without)
+pip install conpot heralding 2>/dev/null
 
-# 4. Start all honeypots
+# 3. Start all 17 honeypots
 python3 start_all.py
 
-# 5. Open the live dashboard
+# 4. Open dashboard
 python3 dashboard.py
-# → Open http://127.0.0.1:5000
+# → Browser: http://127.0.0.1:5000
 
-# 6. In another terminal, run Red Team tests
+# 5. Test in another terminal
 python3 tools/test_scanner.py
-python3 tools/test_bruteforce.py
 
-# 7. Stop everything
+# 6. Stop
 python3 stop_all.py
 ```
 
-> **💡 Note on Kali:** If you get `permission denied` on ports below 1024, run as root or use `sudo`:
+> **💡 Root on Kali:** For ports < 1024, use `sudo`:
 > ```bash
 > sudo python3 start_all.py
 > ```
-> Or change ports in `config.ini` to higher values.
 
 ---
 
 ## 📊 Dashboard (Web UI)
 
-The **Flask web dashboard** gives you live visibility into all attacks:
-
 ```
 http://127.0.0.1:5000
 ```
 
-### Features:
-- ✅ **Auto-refresh** every 5 seconds
-- ✅ **Stats per honeypot type** — see which traps are catching the most
-- ✅ **Live activity tables** — all 7 honeypots with latest events
-- ✅ **Unique attacker IPs** — see how many distinct attackers hit your lab
-- ✅ **JSON API** — programmatic access at `/api/stats` and `/api/logs/<type>`
+### What It Shows
+- **17 honeypot stat cards** — live counter for each type
+- **Recent activity tables** — last 15 events per honeypot
+- **Total events + unique IPs** — at a glance
+- **Auto-refresh** — every 5 seconds
+- **API endpoints** — `/api/stats`, `/api/logs/<type>`, `/api/heatmap`
 
-### Screenshot:
+---
+
+## 🔔 Notification Setup
+
+Get instant alerts when something hits your honeypots:
+
+```bash
+python features/notifications.py
 ```
-┌────────────────────────────────────────────────────────────┐
-│  🍯 Honeypot Lab Dashboard                     [🔃 auto] │
-├────────────────────────────────────────────────────────────┤
-│  🐚 12  🏭 3  🔑 45  🌐 89  🗄️ 7  🦠 23  🖥️ 15        │
-├────────────────────────────────────────────────────────────┤
-│  📊 Total Events: 194  |  Unique IPs: 37  |  7 Active    │
-├────────────────────────────────────────────────────────────┤
-│  🌐 Recent Web Activity               🗄️ DB & RDP       │
-│  2026-07-11 10.0.0.1  POST /wp-admin  │ ES probe from X  │
-│  2026-07-11 10.0.0.2  GET  /admin     │ RDP conn from Y │
-│  ...                                  │ ...              │
-└────────────────────────────────────────────────────────────┘
-```
+
+Supports:
+- **Telegram** — bot token + chat ID
+- **Discord** — webhook URL
+- **Slack** — webhook URL
+- **Email** — SMTP (Gmail, Outlook, custom)
+
+Configure in `notify_config.json` (auto-generated) or via the interactive setup.
 
 ---
 
 ## 🔴 Red Team — Attack Your Own Lab
 
-Test that your honeypots are working by simulating real attacks:
-
 ```bash
-# Interactive port scan & attack simulator
+# Full attack simulator
 python tools/test_scanner.py
+# Option 1: Quick port scan
+# Option 2: Full attack (ports + web + SSH + DB + ICS + RDP + more)
+# Option 3: Web attacks only
+# Option 4: ICS/SCADA only
 
-# Options:
-#   1) Quick scan (port only) — checks what's listening
-#   2) Full attack simulation — ports + web + SSH + DB + ICS + RDP
-#   3) Web attacks only
-#   4) ICS/SCADA probes only
-```
-
-```bash
-# Brute force simulator — test your traps under pressure
+# Brute force simulator
 python tools/test_bruteforce.py
-
-# Options:
-#   1) SSH brute force (tries 40+ credential combinations)
-#   2) HTTP form brute force (tries 15 passwords against /wp-admin)
-#   3) FTP brute force
-#   4) Multi-threaded SSH brute (5 threads, 24 creds)
-#   5) ALL of the above
+# SSH brute force, HTTP form brute, FTP brute, multi-threaded
 ```
 
 ---
@@ -218,29 +228,17 @@ python tools/test_bruteforce.py
 ## 🔵 Blue Team — Analyze the Attacks
 
 ```bash
-# Launch the interactive log analyzer
+# Full threat report
 python tools/analyzer.py
+# Option 1: Generate complete report across all 17 honeypots
+# Option 2: Show top attackers
+# Option 3: Activity timeline
+# Option 4: Deep dive into specific honeypot
+# Option 5: Export all to JSON
 
-# Options:
-#   1) Full threat report — stats across ALL honeypots
-#   2) Top attackers — who's hitting you the most
-#   3) Activity timeline — when attacks happen (hourly/daily)
-#   4) Analyze specific honeypot — deep dive into one
-#   5) Export all data to JSON
-
-# Example output:
-# ┌─────────────────────────────────────────────────────────────┐
-# │  📊 THREAT ANALYSIS REPORT                                 │
-# ├─────────────────────────────────────────────────────────────┤
-# │  🐚 SSH:       12 connections, 5 unique IPs                │
-# │  🌐 Web:       89 requests, /wp-login.php most attacked    │
-# │  🔑 Creds:     45 login attempts, "admin" most common      │
-# │  🗄️ DB:        7 probes                                   │
-# │  🏭 ICS:       3 Modbus probes                              │
-# │  🦠 Malware:   2 files captured                             │
-# │  🖥️ RDP:       15 connections                              │
-# │  📈 TOTAL:     173 events | 37 unique attackers            │
-# └─────────────────────────────────────────────────────────────┘
+# Attack correlation
+python features/correlation.py
+# Shows which IPs are hitting multiple services
 ```
 
 ---
@@ -249,194 +247,171 @@ python tools/analyzer.py
 
 ```
 D:\honey pot\
-├── start_all.py              # Launch all honeypots (one command)
-├── stop_all.py               # Stop all honeypots
-├── status.py                 # Check which honeypots are running
-├── dashboard.py              # Flask web dashboard (http://localhost:5000)
-├── config.ini                # Enable/disable honeypots, set ports
-├── requirements.txt          # Python dependencies
-├── .gitignore
-├── README.md                 # This file
+├── start_all.py           # Launch all 17 honeypots + features
+├── stop_all.py            # Stop all honeypots
+├── status.py              # Check what's running
+├── dashboard.py           # Flask web dashboard (localhost:5000)
+├── config.ini             # Enable/disable, set ports
+├── requirements.txt       # Python dependencies
+├── Makefile               # make start/stop/dashboard/test
+├── install.sh             # Linux one-command installer
+├── install.bat            # Windows one-command installer
+├── LICENSE                # All Rights Reserved
+├── README.md              # This file
 │
 ├── honeypots\
-│   ├── 01_ssh_cowrie\        # 🐚 Cowrie SSH honeypot
-│   │   └── cowrie.cfg
-│   ├── 02_ics_conpot\        # 🏭 ICS/SCADA honeypot (custom Python)
-│   │   ├── conpot.xml        # (for Kali where conpot is installed)
-│   │   └── ics_honeypot.py   # (cross-platform fallback)
-│   ├── 03_creds_heralding\   # 🔑 Credential capture
-│   │   ├── heralding.yml     # (for Kali)
-│   │   └── cred_traps.py     # (cross-platform fallback)
-│   ├── 04_web_traps\         # 🌐 Web honeypots
-│   │   └── web_traps.py
-│   ├── 05_db_traps\          # 🗄️ Database honeypots
-│   │   └── db_traps.py
-│   ├── 06_malware_capture\   # 🦠 Malware capture
-│   │   └── malware_capture.py
-│   └── 07_rdp_trap\          # 🖥️ RDP honeypot
-│       └── rdp_trap.py
+│   ├── 01_ssh_cowrie\     # 🐚 Cowrie SSH
+│   ├── 02_ics_conpot\     # 🏭 ICS/SCADA
+│   ├── 03_creds_heralding\ # 🔑 Credential capture
+│   ├── 04_web_traps\      # 🌐 Web traps
+│   ├── 05_db_traps\       # 🗄️ Database traps
+│   ├── 06_malware_capture\ # 🦠 Malware capture
+│   ├── 07_rdp_trap\       # 🖥️ RDP
+│   ├── 08_smb\            # 📁 SMB/CIFS
+│   ├── 09_dns\            # 🌐 DNS
+│   ├── 10_sip\            # 📞 SIP/VoIP
+│   ├── 11_redis\          # 🔴 Redis
+│   ├── 12_vnc\            # 🖥️ VNC
+│   ├── 13_telnet\         # 📟 Telnet (IoT)
+│   ├── 14_memcached\      # 📦 Memcached
+│   ├── 15_mqtt\           # 📡 MQTT
+│   ├── 16_snmp\           # 🌐 SNMP
+│   └── 17_ntp\            # 🕐 NTP
 │
-├── logs\                     # All captured data (auto-created)
-│   ├── ssh\                  # Cowrie logs
-│   ├── ics\                  # ICS/SCADA probe logs
-│   ├── creds\                # Captured credentials (JSON + CSV)
-│   ├── web\                  # Web attack logs
-│   ├── db\                   # Database probe logs
-│   ├── malware\              # Malware traffic + captured files/
-│   └── rdp\                  # RDP connection logs
+├── features\              # Feature modules
+│   ├── geoip.py           # 🌍 GeoIP tracking
+│   ├── notifications.py   # 🔔 Telegram/Discord/Slack/Email
+│   ├── correlation.py     # 🔗 Attack correlation
+│   ├── heatmap.py         # 🔥 Activity heatmap
+│   ├── intel.py           # 🛡️ Threat intel feeds
+│   └── log_rotation.py    # 📦 Log rotation/cleanup
 │
-└── tools\                    # Red vs Blue tools
-    ├── test_scanner.py       # 🎯 Port scanner & attack simulator
-    ├── test_bruteforce.py    # 🔐 Brute force simulator
-    └── analyzer.py           # 📊 Log analyzer & report generator
+├── logs\                  # All captured data (17 subdirs)
+├── tools\                 # Red vs Blue tools
+└── venv\                  # Python virtual environment
 ```
 
 ---
 
 ## ⚙️ Configuration
 
-Edit `config.ini` to customize your lab:
+Edit `config.ini`:
 
 ```ini
 [general]
-# Set any to "no" to disable that honeypot
+# Disable any honeypot by setting to "no"
 enable_ssh_cowrie = yes
-enable_ics_conpot = yes
-enable_creds_heralding = yes
-enable_web_traps = yes
-enable_db_traps = yes
-enable_malware_capture = yes
-enable_rdp_trap = yes
+enable_smb = yes
+# Enable features
+enable_geoip = yes
+enable_log_rotation = yes
 
 [ports]
-# Change ports if there are conflicts
-ssh_port = 2222           # Change to 22 for real SSH port (needs admin)
-wordpress_port = 80       # Change if port 80 is in use
+ssh_port = 2222        # Change to 22 for real SSH (needs admin)
+smb_port = 445
+dns_port = 53
+# ... all 17 ports configurable
 ```
 
 ---
 
 ## 🧪 Learning Path
 
-### 🟢 Beginner — "Watch the attacks come in"
+### 🟢 Beginner
+1. Deploy: `python start_all.py`
+2. Open dashboard: `http://localhost:5000`
+3. Test with: `python tools/test_scanner.py`
+4. Watch attacks appear on the dashboard
 
-1. Deploy the lab (`python start_all.py`)
-2. Open the dashboard (`http://127.0.0.1:5000`)
-3. Wait for automated scanners to find you
-4. Check what they tried
+### 🟡 Intermediate
+1. Run `python tools/test_bruteforce.py`
+2. See credentials captured in the dashboard
+3. Run `python tools/analyzer.py` for the report
+4. Enable Telegram/Discord notifications
 
-### 🟡 Intermediate — "Attack yourself and analyze"
-
-1. Deploy the lab
-2. Run `python tools/test_scanner.py` (option 2 — full attack)
-3. Check the dashboard — see what was logged
-4. Run `python tools/analyzer.py` — generate the report
-5. Understand the attack patterns
-
-### 🔴 Advanced — "Go live on the internet"
-
-> ⚠️ **WARNING:** Only do this in a VM on an isolated network!
-
-1. Deploy on a cloud VM (AWS, DigitalOcean, Vultr)
-2. Expose ports through firewall
-3. Watch REAL attackers find you within minutes
+### 🔴 Advanced
+1. Deploy on a cloud VM (AWS/DigitalOcean)
+2. Open ports in firewall
+3. Watch **real** attackers find you within minutes
 4. Analyze malware samples collected
-5. Build detection rules from the patterns
+5. Correlate attackers across services
 
-### 🏆 Expert — "Red vs Blue CTF"
-
-1. Set up two machines:
-   - **Red machine:** Attack tools, Kali Linux
-   - **Blue machine:** Your honeypot lab
-2. Red team attacks the honeypots using `test_bruteforce.py` + custom tools
-3. Blue team monitors the dashboard and writes analysis reports
-4. Switch roles and compare scores
+### 🏆 Expert — CTF
+1. Two machines: Red (Kali) vs Blue (your lab)
+2. Red team attacks using custom tools
+3. Blue team monitors dashboard + writes analysis
+4. Switch roles and compare
 
 ---
 
 ## 🔒 Security Warnings
 
-> ⚠️ **⚠️ CRITICAL: Read this before running!**
+> ⚠️ **⚠️ READ THIS BEFORE RUNNING!**
 
 | Risk | Mitigation |
 |------|-----------|
-| 🚪 **Open ports** expose your machine to the internet | Only run on isolated networks or VMs |
-| 🦠 **Malware capture** downloads real malware samples | Handle captured files in sandboxed environment only |
-| ⚖️ **Legal issues** — running honeypots may be regulated | Check local laws before exposing to internet |
-| 🔓 **Ports < 1024** require admin/root | Use ports > 1024 or run as admin |
-| 🌐 **Port 3389** (RDP) conflicts with Windows RDP | Disable Windows RDP first, or change port |
-| 🏢 **Corporate networks** — may trigger security alerts | Get permission first |
+| 🚪 **Open ports** expose your machine | Run on isolated VM or private network only |
+| 🦠 **Malware capture** downloads real samples | Handle in sandbox — never run on host |
+| ⚖️ **Legal issues** — honeypots may be regulated | Check local laws before internet exposure |
+| 🔓 **Ports < 1024** need admin | Use higher ports or run as admin/root |
+| 🖥️ **Port 3389** conflicts with Windows RDP | Disable Windows RDP or change port |
+| 🏢 **Corporate networks** — triggers security alerts | Get written permission first |
 
-### 🛡️ Safe Deployment Options
-
+### Safe Deployment
 ```bash
-# Option 1: Local only (safe)
-# Your honeypots will only be accessible from your own machine
-# → bind_host = 127.0.0.1 in config.ini
+# Local only (safest — edit config.ini):
+bind_host = 127.0.0.1
 
-# Option 2: VM (recommended for learning)
-# Run in VirtualBox/VMware with NAT network
-
-# Option 3: Cloud VM (advanced)
-# Deploy on DigitalOcean/AWS and analyze real internet traffic
+# VM (recommended): VirtualBox/VMware with NAT
+# Cloud (expert): DigitalOcean/AWS — real internet traffic
 ```
 
 ---
 
 ## ❓ Troubleshooting
 
-### Port already in use?
+**Port already in use?**
 ```bash
-# Check what's using the port
-netstat -ano | findstr :2222    # Windows
-sudo netstat -tlnp | grep 2222  # Linux
-
-# Change port in config.ini and restart
+netstat -ano | findstr :2222     # Windows
+sudo netstat -tlnp | grep 2222   # Linux
+# Change port in config.ini
 ```
 
-### Permission denied (Windows)?
-```powershell
-# Run PowerShell as Administrator, OR
-# Change to higher ports in config.ini (> 1024)
-```
-
-### Permission denied (Kali/Linux)?
+**Permission denied on ports < 1024?**
 ```bash
-# Run with sudo, OR
-sudo python3 start_all.py
-# Change to higher ports in config.ini
+# Windows: Run as Administrator
+# Linux: sudo python3 start_all.py
+# Or use higher ports (> 1024)
 ```
 
-### "Module not found" errors?
+**Module not found?**
 ```bash
-pip install -r requirements.txt  # Install all dependencies
-# On Kali, extra install:
-pip install conpot heralding     # Native C builds work on Linux
+pip install -r requirements.txt
 ```
 
-### Nothing appears in dashboard?
+**Nothing appears in dashboard?**
 ```bash
-# Generate test traffic:
-python tools/test_scanner.py
-# Check honeypots are running:
-python status.py
+python tools/test_scanner.py  # Generate test traffic
+python status.py              # Check honeypots are running
 ```
 
-### RDP port (3389) won't start on Windows?
-```powershell
-# Windows uses port 3389 for its own RDP server
-# Either:
-#   1. Stop Windows RDP: sc stop TermService
-#   2. Or change port in config.ini to 13389
+**Dashboard won't start?**
+```bash
+# Port 5000 might be in use — check:
+netstat -ano | findstr :5000
 ```
 
 ---
 
 ## 📄 License
 
-MIT License — use freely for learning, training, and research.
+All Rights Reserved — Copyright (c) 2026 **JOJIN JOHN**
+
+This software and associated documentation files are protected by copyright law. No part may be reproduced, distributed, or transmitted without prior written permission.
+
+For licensing inquiries: **jojin1709@gmail.com**
 
 ---
 
 **Built with ❤️ for the cybersecurity community.**
-**Happy hunting! 🏴‍☠️**
+**Stay safe, hack ethically. 🏴‍☠️**

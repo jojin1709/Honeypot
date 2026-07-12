@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Database Honeypot Traps
 Fake Elasticsearch and MongoDB servers that log all queries.
@@ -67,7 +76,7 @@ class ElasticsearchTrap:
 
             # Log it
             log_file = os.path.join(LOG_DIR, "elasticsearch_traps.jsonl")
-            with open(log_file, "a") as f:
+            with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
 
             print(f"  🗄️  ES | {timestamp[:19]} | {client_ip:>15} | {method:>4} {path}")
@@ -215,7 +224,7 @@ class MongoDumpTrap:
             }
 
             log_file = os.path.join(LOG_DIR, "mongodb_traps.jsonl")
-            with open(log_file, "a") as f:
+            with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
 
             print(f"  🗄️  MDB | {timestamp[:19]} | {client_ip:>15} | {len(data)} bytes")

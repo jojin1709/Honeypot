@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+import sys as _sys, os as _os
+if _sys.platform == "win32":
+    _os.environ.setdefault("PYTHONUTF8", "1")
+    _os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 """
 Red Team: Honeypot Lab Brute Forcer
 Test your honeypots by simulating brute force attacks.
@@ -207,7 +216,7 @@ def main():
     creds_log = os.path.join(LAB_DIR, "..", "logs", "creds", "heralding.log")
     if os.path.exists(creds_log):
         print(f"\n  📄 Last 10 lines of {creds_log}:")
-        with open(creds_log) as f:
+        with open(creds_log, encoding="utf-8") as f:
             lines = f.readlines()
         for line in lines[-10:]:
             print(f"    {line.strip()}")
