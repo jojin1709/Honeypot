@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honeypot Lab — 17 Traps. One Hive. Real Attackers.</title>
+<meta name="description" content="A 17-honeypot cybersecurity lab with a live dashboard, GeoIP tracking, attack correlation, and red/blue team tools. Runs on Windows and Kali/Linux.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="top">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="brand-mark">🍯</span> Honeypot&nbsp;Lab</a>
+    <nav class="nav-links">
+      <a href="#hive">The Hive</a>
+      <a href="#quickstart">Quick Start</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#features">Features</a>
+      <a href="#tools">Red / Blue</a>
+      <a href="#config">Config</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/jojin1709/Honeypot" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      View on GitHub
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hex-field" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Open-source · Windows &amp; Kali/Linux · No Docker required</p>
+      <h1>Sweet enough<br>to get caught in.</h1>
+      <p class="hero-sub">
+        Seventeen fake services — SSH, RDP, SMB, Redis, ICS, and more — deployed
+        as one lab. Every login attempt, command, and malware sample an attacker
+        leaves behind gets logged, mapped, and shown to you live.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#quickstart">Get started <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="https://github.com/jojin1709/Honeypot" target="_blank" rel="noopener">Star on GitHub</a>
+      </div>
+      <ul class="hero-stats">
+        <li><strong>17</strong><span>honeypot types</span></li>
+        <li><strong>6</strong><span>analysis features</span></li>
+        <li><strong>2</strong><span>platforms</span></li>
+        <li><strong>1</strong><span>command to launch</span></li>
+      </ul>
+    </div>
+
+    <div class="hero-terminal">
+      <div class="term-chrome">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span class="term-title">python start_all.py</span>
+      </div>
+      <pre class="term-body" id="termBody" aria-label="Terminal output of start_all.py"></pre>
+    </div>
+  </div>
+
+  <a class="scroll-cue" href="#hive" aria-label="Scroll to The Hive">
+    <span class="hex-cue" aria-hidden="true"></span>
+  </a>
+</section>
+
+<!-- ============ THE HIVE ============ -->
+<section class="hive-section" id="hive">
+  <div class="section-inner">
+    <p class="eyebrow center">The Hive</p>
+    <h2 class="section-title center">Seventeen cells. Seventeen traps.</h2>
+    <p class="section-sub center">
+      Every honeypot in the lab is one hexagon in the hive. Tap a cell to see
+      what it pretends to be, which port it listens on, and what it captures
+      when something comes crawling in.
+    </p>
+
+    <div class="hive-wrap">
+      <div class="hive" id="hive-grid" role="list"></div>
+      <div class="hive-detail" id="hiveDetail">
+        <div class="hive-detail-empty">
+          <span class="hive-detail-icon">🍯</span>
+          <p>Select a cell to inspect a trap.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="hive-note">
+      Only cell <strong>01 · SSH/Telnet</strong> runs on the third-party
+      <a href="https://github.com/cowrie/cowrie" target="_blank" rel="noopener">Cowrie</a>
+      engine. The other sixteen are custom, dependency-free Python socket
+      servers built for this lab — identical behavior on Windows and Linux.
+    </p>
+  </div>
+</section>
+
+<!-- ============ QUICK START ============ -->
+<section class="quickstart" id="quickstart">
+  <div class="section-inner">
+    <p class="eyebrow center">Quick Start</p>
+    <h2 class="section-title center">From clone to captured, in five commands.</h2>
+
+    <div class="tabs" id="osTabs">
+      <button class="tab active" data-os="windows">Windows</button>
+      <button class="tab" data-os="linux">Kali / Linux</button>
+    </div>
+
+    <div class="qs-grid">
+      <div class="qs-steps">
+        <ol class="steps" id="qsSteps"></ol>
+      </div>
+      <div class="qs-terminal">
+        <div class="term-chrome">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="term-title" id="qsTermTitle">powershell</span>
+        </div>
+        <pre class="term-body term-static" id="qsTermBody"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="dashboard-preview" id="dashboard">
+  <div class="section-inner">
+    <div class="dash-copy">
+      <p class="eyebrow">Live Dashboard</p>
+      <h2 class="section-title">Watch the hive from the outside.</h2>
+      <p class="section-sub">
+        <code>python dashboard.py</code> starts a Flask dashboard at
+        <code>http://127.0.0.1:5000</code> — one stat card per honeypot,
+        recent activity tables, unique attacker counts, and a 5-second
+        auto-refresh. No build step, no separate frontend.
+      </p>
+      <table class="endpoint-table">
+        <thead><tr><th>Endpoint</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /api/stats</code></td><td>Live counts per honeypot + unique IPs</td></tr>
+          <tr><td><code>GET /api/logs/&lt;type&gt;?n=20</code></td><td>Last <em>n</em> log entries (max 100)</td></tr>
+          <tr><td><code>GET /heatmap</code></td><td>Hourly / daily activity heatmap (JSON)</td></tr>
+          <tr><td><code>GET /correlation</code></td><td>Attackers hitting multiple honeypots</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="dash-mock" aria-hidden="true">
+      <div class="dash-mock-bar">
+        <span class="dash-mock-dot"></span>
+        <span class="dash-mock-dot"></span>
+        <span class="dash-mock-dot"></span>
+        <span class="dash-mock-url">127.0.0.1:5000</span>
+      </div>
+      <div class="dash-mock-grid">
+        <div class="dash-mock-card"><span class="dm-icon">🐚</span><span class="dm-num">42</span><span class="dm-label">SSH</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🌐</span><span class="dm-num">118</span><span class="dm-label">Web</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🔑</span><span class="dm-num">27</span><span class="dm-label">Creds</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🦠</span><span class="dm-num">3</span><span class="dm-label">Malware</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">📟</span><span class="dm-num">96</span><span class="dm-label">Telnet</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🔴</span><span class="dm-num">14</span><span class="dm-label">Redis</span></div>
+      </div>
+      <div class="dash-mock-table">
+        <div class="dm-row dm-head"><span>Time</span><span>IP</span><span>Event</span></div>
+        <div class="dm-row"><span>17:42:03</span><span>185.220.x.x</span><span>root:123456</span></div>
+        <div class="dm-row"><span>17:41:58</span><span>45.148.x.x</span><span>GET /wp-login.php</span></div>
+        <div class="dm-row"><span>17:41:51</span><span>103.75.x.x</span><span>EternalBlue probe</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <p class="eyebrow center">Beyond the traps</p>
+    <h2 class="section-title center">What happens after something bites.</h2>
+
+    <div class="feature-grid">
+      <article class="feature-card">
+        <span class="feature-icon">🌍</span>
+        <h3>GeoIP Tracking</h3>
+        <p>Every attacker IP resolves to a country, city, and ISP — no manual lookups.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔗</span>
+        <h3>Attack Correlation</h3>
+        <p>Same IP hitting SSH, then SMB, then Redis? Correlation ties it to one campaign.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔥</span>
+        <h3>Activity Heatmap</h3>
+        <p>Hourly and daily patterns across all 17 traps, so you can see when scanners work.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <h3>Notifications</h3>
+        <p>Telegram, Discord, Slack, or SMTP email — get pinged the moment a trap fires.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">📦</span>
+        <h3>Log Rotation</h3>
+        <p>Auto-archives past 50MB per file and 30 days retention. Your disk stays clean.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🛡️</span>
+        <h3>Threat Intel Feeds</h3>
+        <p>Optional AbuseIPDB, VirusTotal, Shodan, and GreyNoise enrichment for captured IPs.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RED / BLUE ============ -->
+<section class="tools" id="tools">
+  <div class="section-inner">
+    <p class="eyebrow center">Attack it. Then analyze it.</p>
+    <h2 class="section-title center">Built for both sides of the fight.</h2>
+
+    <div class="tools-split">
+      <div class="tool-col tool-red">
+        <h3><span aria-hidden="true">🔴</span> Red Team</h3>
+        <p>Throw real traffic at your own lab, safely, before anyone else does.</p>
+        <pre class="code-block"><code>python tools/test_scanner.py
+&#35; 1&#41; Quick port scan
+&#35; 2&#41; Full attack simulation
+&#35; 3&#41; Web attacks only
+&#35; 4&#41; ICS/SCADA probes only
+
+python tools/test_bruteforce.py
+&#35; SSH, HTTP form, and FTP brute force</code></pre>
+      </div>
+      <div class="tool-col tool-blue">
+        <h3><span aria-hidden="true">🔵</span> Blue Team</h3>
+        <p>Turn raw captures into a report you'd actually hand to a SOC lead.</p>
+        <pre class="code-block"><code>python tools/analyzer.py
+&#35; 1&#41; Full threat report
+&#35; 2&#41; Top attackers
+&#35; 3&#41; Activity timeline
+&#35; 4&#41; Deep dive per honeypot
+&#35; 5&#41; Export everything to JSON
+
+python features/correlation.py
+&#35; Cross-honeypot attacker correlation</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIG ============ -->
+<section class="config" id="config">
+  <div class="section-inner config-grid">
+    <div>
+      <p class="eyebrow">Configuration</p>
+      <h2 class="section-title">One file controls the whole hive.</h2>
+      <p class="section-sub">
+        Disable a honeypot you don't need, remap a port, or turn on a feature —
+        <code>config.ini</code> is the single source of truth, and it's the
+        only file you edit for day-to-day use.
+      </p>
+      <ul class="config-notes">
+        <li><strong>Windows note —</strong> Cowrie's SSH config is synced from <code>config.ini</code>'s <code>ssh_port</code> automatically on every start.</li>
+        <li><strong>Ports under 1024</strong> (like real port 22 or 53) need Administrator / <code>sudo</code>.</li>
+        <li><strong>Local-only testing?</strong> Set <code>bind_host = 127.0.0.1</code> instead of <code>0.0.0.0</code>.</li>
+      </ul>
+    </div>
+    <pre class="code-block code-block-lg"><code>[general]
+bind_host = 0.0.0.0
+enable_ssh_cowrie = yes
+enable_smb        = yes
+enable_geoip      = yes
+enable_log_rotation = yes
+enable_notifications = no
+
+[ports]
+ssh_port    = 2222   &#35; 22 needs admin
+smb_port    = 445
+dns_port    = 53
+redis_port  = 6379
+&#35; ...all 17 ports configurable
+
+[features]
+log_max_size_mb    = 50
+log_retention_days = 30</code></pre>
+  </div>
+</section>
+
+<!-- ============ WARNING ============ -->
+<section class="warning-band">
+  <div class="section-inner warning-inner">
+    <span class="warning-icon" aria-hidden="true">⚠</span>
+    <div>
+      <h2>Read this before you expose it to the internet.</h2>
+      <p>
+        Open ports invite real traffic. Malware capture downloads <em>real</em>
+        samples — handle them in a sandbox, never on your host. Honeypots may
+        be legally regulated in some jurisdictions and will trigger security
+        alerts on corporate networks. Run on an isolated VM or private network
+        unless you know exactly what you're doing and have permission to do it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <p class="eyebrow center">Troubleshooting</p>
+    <h2 class="section-title center">Before you file an issue</h2>
+
+    <div class="accordion" id="accordion"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="section-inner footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark">🍯</span> Honeypot Lab
+      <p>All Rights Reserved © 2026 JOJIN JOHN. Built for the cybersecurity community.</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/jojin1709/Honeypot" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/jojin1709/Honeypot#readme" target="_blank" rel="noopener">Full README</a>
+      <a href="mailto:jojin1709@gmail.com">jojin1709@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
