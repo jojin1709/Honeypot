@@ -20,7 +20,7 @@ import socket
 import struct
 import threading
 
-LAB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "rdp")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -84,7 +84,8 @@ class RDPTrap:
                        f"{rdp_info.get('requested_protocols', 'unknown')},"
                        f"{rdp_info.get('client_name', 'unknown')}\n")
 
-            print(f"  🖥️  RDP | {timestamp[:19]} | {client_ip:>15}:{addr[1]} | "
+            print(f"
+            log_alert("rdp", client_ip, "connection")  🖥️  RDP | {timestamp[:19]} | {client_ip:>15}:{addr[1]} | "
                   f"Conn #{conn_id} | {len(data)} bytes")
 
             # Respond with RDP Negotiation Response
@@ -234,6 +235,7 @@ def main():
 
             while True:
                 import time
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
                 time.sleep(1)
         else:
             print("  ❌ Failed to start RDP trap")

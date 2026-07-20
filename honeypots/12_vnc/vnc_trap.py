@@ -9,8 +9,9 @@ if _sys.platform == "win32":
     except Exception:
         pass
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "vnc")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -25,7 +26,8 @@ class VNCTrap:
             ts = datetime.datetime.now().isoformat()
             entry = {"timestamp": ts, "source_ip": client_ip, "protocol": "VNC", "data_length": len(data)}
             with open(os.path.join(LOG_DIR, "vnc_attempts.jsonl"), "a", encoding="utf-8") as f: f.write(json.dumps(entry)+"\n")
-            print(f"  🖥️  VNC | {ts[:19]} | {client_ip:>15} | {len(data)} bytes")
+            print(f"
+            log_alert("vnc", client_ip, "connection")  🖥️  VNC | {ts[:19]} | {client_ip:>15} | {len(data)} bytes")
             conn.send(b"RFB 003.008\n")
         except: pass
         finally: conn.close()

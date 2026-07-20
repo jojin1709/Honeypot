@@ -15,9 +15,23 @@ import os, sys, glob, gzip, shutil, datetime, time, threading
 
 LAB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGS_DIR = os.path.join(LAB_DIR, "logs")
+
+# Defaults used for standalone/CLI use; start_all.py overrides these from
+# config.ini's [features] log_max_size_mb / log_retention_days via configure().
 MAX_LOG_SIZE = 50 * 1024 * 1024  # 50MB per file before rotation
 MAX_LOG_AGE_DAYS = 30  # Delete logs older than this
 CHECK_INTERVAL = 3600  # Check every hour
+
+def configure(max_size_mb=None, retention_days=None, check_interval=None):
+    """Override the module-level thresholds, normally called with values
+    read from config.ini so the [features] section actually has an effect."""
+    global MAX_LOG_SIZE, MAX_LOG_AGE_DAYS, CHECK_INTERVAL
+    if max_size_mb is not None:
+        MAX_LOG_SIZE = int(max_size_mb) * 1024 * 1024
+    if retention_days is not None:
+        MAX_LOG_AGE_DAYS = int(retention_days)
+    if check_interval is not None:
+        CHECK_INTERVAL = int(check_interval)
 
 def rotate_file(filepath):
     """Rotate a single log file"""
@@ -60,7 +74,8 @@ def run_loop():
         clean_old_logs()
         time.sleep(CHECK_INTERVAL)
 
-def start_background():
+def start_background(max_size_mb=None, retention_days=None):
+    configure(max_size_mb=max_size_mb, retention_days=retention_days)
     threading.Thread(target=run_loop, daemon=True).start()
     print(f"  📦 Log rotation active — max {MAX_LOG_SIZE//1024//1024}MB/file, keep {MAX_LOG_AGE_DAYS} days")
 

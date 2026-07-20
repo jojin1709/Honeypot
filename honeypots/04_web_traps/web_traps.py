@@ -20,7 +20,7 @@ import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
-LAB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "web")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -57,6 +57,7 @@ class WebTrapHandler(BaseHTTPRequestHandler):
         }
 
         CAPTURED_REQUESTS.append(entry)
+            log_alert("web", client_ip, f"{method} {path}")
 
         # Log to file
         log_file = os.path.join(LOG_DIR, "web_traps.jsonl")
@@ -249,6 +250,7 @@ def main():
         # Keep main thread alive
         while True:
             import time
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
             time.sleep(1)
     except KeyboardInterrupt:
         print("\n  🛑  Shutting down web traps...")

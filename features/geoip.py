@@ -17,8 +17,12 @@ def lookup_ip(ip):
     """Get GeoIP info for an IP address"""
     if ip in geo_cache:
         return geo_cache[ip]
-    if ip.startswith("127.") or ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16."):
-        result = {"ip": ip, "country": "Private", "city": "Local", "isp": "Internal"}
+    if ip.startswith("127.") or ip == "::1":
+        result = {"ip": ip, "country": "Local", "city": "Loopback", "isp": "Internal"}
+        geo_cache[ip] = result
+        return result
+    if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172.16."):
+        result = {"ip": ip, "country": "Private", "city": "LAN", "isp": "Internal"}
         geo_cache[ip] = result
         return result
     try:

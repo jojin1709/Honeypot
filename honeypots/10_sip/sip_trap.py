@@ -12,8 +12,9 @@ if _sys.platform == "win32":
 SIP/VoIP Honeypot — Captures SIP scanning, registration attempts, and call invites.
 """
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "sip")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -45,7 +46,8 @@ class SIPTrap:
                         parts = first_line.split(" ")
                         method = parts[0] if len(parts) > 0 else "UNKNOWN"
                         uri = parts[1] if len(parts) > 1 else ""
-                        self.log(client_ip, method, uri, data)
+                        self.log(client_ip, method
+            log_alert("sip", client_ip, f"{method} {uri}"), uri, data)
                         # Send fake SIP response
                         resp = f"SIP/2.0 200 OK\r\nVia: {first_line}\r\nFrom: <sip:trap@lab>;tag=1234\r\nTo: <{uri}>\r\nCall-ID: trap\r\nCSeq: 1 INVITE\r\nContact: <sip:trap@127.0.0.1>\r\nContent-Length: 0\r\n\r\n"
                         self.sock.sendto(resp.encode(), addr)

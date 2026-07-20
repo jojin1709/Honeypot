@@ -9,8 +9,9 @@ if _sys.platform == "win32":
     except Exception:
         pass
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "redis")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -25,7 +26,8 @@ class RedisTrap:
             ts = datetime.datetime.now().isoformat()
             entry = {"timestamp": ts, "source_ip": client_ip, "protocol": "Redis", "data": data.decode(errors="replace")[:500]}
             with open(os.path.join(LOG_DIR, "redis_probes.jsonl"), "a", encoding="utf-8") as f: f.write(json.dumps(entry) + "\n")
-            print(f"  🔴 Redis | {ts[:19]} | {client_ip:>15} | {data[:50].decode(errors='replace').strip()}")
+            print(f"
+            log_alert("redis", client_ip, "probe")  🔴 Redis | {ts[:19]} | {client_ip:>15} | {data[:50].decode(errors='replace').strip()}")
             conn.send(b"+OK\r\n")
         except: pass
         finally: conn.close()

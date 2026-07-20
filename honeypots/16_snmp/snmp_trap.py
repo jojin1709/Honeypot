@@ -10,7 +10,7 @@ if _sys.platform == "win32":
         pass
 import os, sys, json, socket, datetime, threading
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "snmp")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -22,7 +22,8 @@ class SNMPTrap:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.sock.bind((self.host, self.port)); self.sock.settimeout(1); self.running = True
-            print(f"  🌐 SNMP trap on port {self.port} (UDP)")
+            print(f"
+            log_alert("snmp", client_ip, community)  🌐 SNMP trap on port {self.port} (UDP)")
             def s():
                 while self.running:
                     try:
@@ -36,6 +37,7 @@ class SNMPTrap:
                         print(f"  🌐 SNMP | {ts[:19]} | {client_ip:>15} | community='{community}'")
                         # Send fake SNMP response
                         import struct
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
                         req_id = data[20:24] if len(data) > 24 else b"\x00\x00\x00\x00"
                         resp = b"0,\x02\x01\x01\x04\x06public\xa2\x1f\x02\x04" + req_id + b"\x02\x01\x00\x02\x01\x000\x12\x06\x10+\x06\x01\x04\x01\x82\xdf\x15\xc0\xa7\x01\x00\x01\x00\x00\x00\x05\x00"
                         self.sock.sendto(resp, addr)

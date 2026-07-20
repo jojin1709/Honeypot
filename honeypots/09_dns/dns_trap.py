@@ -12,13 +12,16 @@ if _sys.platform == "win32":
 DNS Honeypot — Captures DNS tunneling, amplification probes, and lookup queries.
 """
 import os, sys, json, socket, struct, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "dns")
 os.makedirs(LOG_DIR, exist_ok=True)
 
 class DNSTrap:
-    def __init__(self, host="0.0.0.0", port=53):
+    def __init__(self, host="0.0.0.0", port=None):
+        if port is None:
+            port = int(os.environ.get("DNS_PORT", "5353"))
         self.host, self.port, self.running = host, port, False
         self.sock = None
     def log(self, client_ip, query_name="", query_type="", data=b""):
@@ -54,7 +57,8 @@ class DNSTrap:
                                 qname = ".".join(labels)
                                 qtype = {1: "A", 2: "NS", 5: "CNAME", 15: "MX", 28: "AAAA", 255: "ANY", 35: "NAPTR", 65: "HTTPS"}.get(struct.unpack("!H", data[i+1:i+3])[0], "OTHER")
                             except: qname = "[parse error]"
-                        self.log(client_ip, qname, qtype, data)
+                        self.log(client_ip, qname
+            log_alert("dns", client_ip, qname), qtype, data)
                     except socket.timeout: continue
             threading.Thread(target=serve, daemon=True).start()
         except Exception as e: print(f"  ❌ DNS trap failed: {e}")

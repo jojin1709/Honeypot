@@ -19,7 +19,7 @@ import datetime
 import socket
 import threading
 
-LAB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "db")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -79,7 +79,8 @@ class ElasticsearchTrap:
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
 
-            print(f"  🗄️  ES | {timestamp[:19]} | {client_ip:>15} | {method:>4} {path}")
+            print(f"
+            log_alert("db", client_ip, path)  🗄️  ES | {timestamp[:19]} | {client_ip:>15} | {method:>4} {path}")
 
             # Respond based on path
             if path.startswith("/_search") or "/_search" in path:
@@ -275,6 +276,7 @@ def main():
 
         while True:
             import time
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
             time.sleep(1)
     except KeyboardInterrupt:
         print("\n  🛑  Shutting down DB traps...")

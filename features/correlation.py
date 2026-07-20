@@ -46,11 +46,13 @@ def correlate():
     ip_count = collections.Counter()
     for e in events:
         ip = e.get("src_ip") or e.get("source_ip") or ""
-        if not ip or ip in ("127.0.0.1", "::1", "unknown"): continue
+        if not ip or ip in ("::1", "unknown"): continue
         ip_services[ip].add(e.get("_honeypot_type", "unknown"))
         ip_count[ip] += 1
     multi_service = {ip: svc for ip, svc in ip_services.items() if len(svc) >= 2}
-    return {"total_events": len(events), "unique_ips": len(ip_count), "multi_service_attackers": len(multi_service), "top_attackers": ip_count.most_common(20), "multi_service": sorted(multi_service.items(), key=lambda x: len(x[1]), reverse=True)[:20]}
+    top_list = [{"ip": ip, "count": cnt} for ip, cnt in ip_count.most_common(20)]
+    multi_list = [{"ip": ip, "count": ip_count[ip], "services": sorted(list(svc))} for ip, svc in sorted(multi_service.items(), key=lambda x: len(x[1]), reverse=True)[:20]]
+    return {"total_events": len(events), "unique_ips": len(ip_count), "multi_service_attackers": len(multi_service), "top_attackers": top_list, "multi_service": multi_list}
 
 def print_report():
     r = correlate()

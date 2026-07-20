@@ -21,7 +21,7 @@ import datetime
 import threading
 import base64
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+LAB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "creds")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -34,7 +34,8 @@ if not os.path.exists(CSV_FILE):
 CRED_LOGS = []
 
 
-def log_cred(protocol, client_ip, client_port, username, password, details=""):
+def log_cred(protocol, client_ip
+            log_alert("creds", client_ip, f"{protocol}:{username}:{password}"), client_port, username, password, details=""):
     """Log a captured credential"""
     timestamp = datetime.datetime.now().isoformat()
 
@@ -469,6 +470,7 @@ def main():
     try:
         while True:
             import time
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
             time.sleep(1)
     except KeyboardInterrupt:
         print(f"\n  🛑  Shutting down credential traps...")

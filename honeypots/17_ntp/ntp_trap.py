@@ -9,8 +9,9 @@ if _sys.platform == "win32":
     except Exception:
         pass
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "ntp")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -22,7 +23,8 @@ class NTPTrap:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.sock.bind((self.host, self.port)); self.sock.settimeout(1); self.running = True
-            print(f"  🕐 NTP trap on port {self.port} (DDoS amp)")
+            print(f"
+            log_alert("ntp", client_ip, "query")  🕐 NTP trap on port {self.port} (DDoS amp)")
             def s():
                 while self.running:
                     try:

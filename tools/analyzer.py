@@ -44,13 +44,13 @@ def analyze_all():
                         line = line.strip()
                         if not line: continue
                         count += 1
+                        total_events += 1
                         try:
                             e = json.loads(line)
                             ip = e.get(ip_key) or e.get("source_ip") or ""
                             if ip and ip not in ("127.0.0.1","::1","unknown"):
                                 all_ips[ip] += 1
                                 ips[ip] += 1
-                                total_events += 1
                             ts = e.get("timestamp","")
                             if ts and len(ts) >= 16:
                                 try:

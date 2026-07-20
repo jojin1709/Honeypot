@@ -9,8 +9,9 @@ if _sys.platform == "win32":
     except Exception:
         pass
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "telnet")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -25,7 +26,8 @@ class TelnetTrap:
             ts = datetime.datetime.now().isoformat()
             entry = {"timestamp": ts, "source_ip": client_ip, "protocol": "Telnet-IoT", "data": data.decode(errors="replace")[:500]}
             with open(os.path.join(LOG_DIR, "telnet_attempts.jsonl"), "a", encoding="utf-8") as f: f.write(json.dumps(entry)+"\n")
-            print(f"  📟 Telnet | {ts[:19]} | {client_ip:>15} | {data.decode(errors='replace')[:60].strip()}")
+            print(f"
+            log_alert("telnet", client_ip, "IoT probe")  📟 Telnet | {ts[:19]} | {client_ip:>15} | {data.decode(errors='replace')[:60].strip()}")
             conn.send(b"\r\nBusyBox v1.30.1 login: ")
         except: pass
         finally: conn.close()

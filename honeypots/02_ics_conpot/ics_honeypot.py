@@ -22,7 +22,7 @@ import datetime
 import threading
 import hashlib
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+LAB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "ics")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -385,6 +385,7 @@ def main():
     try:
         while True:
             import time
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
             time.sleep(1)
     except KeyboardInterrupt:
         print("\n  🛑  Shutting down ICS honeypots...")

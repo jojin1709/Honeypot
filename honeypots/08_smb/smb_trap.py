@@ -13,8 +13,9 @@ SMB/CIFS Honeypot — Emulates Windows file sharing (port 445)
 Captures EternalBlue scans, WannaCry probes, and SMB enumeration.
 """
 import os, sys, json, socket, struct, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "smb")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -57,7 +58,8 @@ class SMBTrap:
             data = conn.recv(4096)
             if not data: return
             if b"\xffSMB" in data[:4] or b"\xfeSMB" in data[:4]:
-                self.log(client_ip, data, "[SMBv1/EternalBlue probe]")
+                self.log(client_ip, data
+            log_alert("smb", client_ip, note), "[SMBv1/EternalBlue probe]")
             elif b"\x00\x00\x00" in data[:4]:
                 self.log(client_ip, data, "[NetBIOS/SMB session request]")
             else:

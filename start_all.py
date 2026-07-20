@@ -12,7 +12,7 @@ if _sys.platform == "win32":
 HoneyPot Lab - Start All Honeypots (17 types + Features)
 Launches each enabled honeypot as a background process, plus feature modules.
 """
-import os, sys, subprocess, configparser, time, signal, threading, re
+import os, sys, subprocess, configparser, time, signal, threading, re, shutil
 
 LAB_DIR = os.path.dirname(os.path.abspath(__file__))
 HONEYPOTS_DIR = os.path.join(LAB_DIR, "honeypots")
@@ -30,14 +30,17 @@ def is_enabled(config, key):
 def get_port(config, key, default):
     return config.get("ports", key, fallback=str(default))
 
-def start_script(config, enable_key, script_rel, name, log_subdir, log_name):
+def start_script(config, enable_key, script_rel, name, log_subdir, log_name, port_key=None):
     if not is_enabled(config, enable_key):
         return None
     log_dir = os.path.join(LOGS_DIR, log_subdir)
     os.makedirs(log_dir, exist_ok=True)
     log_file = open(os.path.join(log_dir, log_name), "ab", 0)
     script_path = os.path.join(HONEYPOTS_DIR, script_rel)
-    proc = subprocess.Popen([sys.executable, script_path], stdout=log_file, stderr=subprocess.STDOUT)
+    env = {**os.environ}
+    if port_key:
+        env[port_key] = get_port(config, port_key.lower(), "0")
+    proc = subprocess.Popen([sys.executable, script_path], stdout=log_file, stderr=subprocess.STDOUT, env=env)
     return proc
 
 # === HONEYPOT STARTERS ===
@@ -58,6 +61,11 @@ def start_cowrie(config):
         with open(cfg_src, encoding="utf-8") as f:
             cfg_text = f.read()
         cfg_text = re.sub(r"listen_endpoints\s*=\s*tcp:\d+", f"listen_endpoints = tcp:{port}", cfg_text)
+        # Fix hardcoded Windows paths for cross-platform support
+        ssh_log_dir = os.path.join(LOGS_DIR, "ssh").replace("\\", "/")
+        cfg_text = cfg_text.replace("D:/honey pot/logs/ssh/", ssh_log_dir + "/")
+        # Also fix relative paths (cowrie resolves relative to cwd=cfg_dir)
+        cfg_text = cfg_text.replace("logs/ssh/", ssh_log_dir + "/")
         with open(cfg_dst, "w", encoding="utf-8") as f:
             f.write(cfg_text)
 
@@ -67,7 +75,12 @@ def start_cowrie(config):
     # this works cross-platform and keeps the process trackable for stop_all.py.
     venv_scripts = os.path.dirname(sys.executable)
     twistd_bin = os.path.join(venv_scripts, "twistd.exe" if os.name == "nt" else "twistd")
-    log_file = open(os.path.join(LOGS_DIR, "ssh", "cowrie_stdout.log"), "ab", 0)
+    # Fallback: search PATH for twistd (handles --user installs on Linux)
+    if not os.path.isfile(twistd_bin):
+        twistd_bin = shutil.which("twistd") or twistd_bin
+    ssh_log_dir = os.path.join(LOGS_DIR, "ssh")
+    os.makedirs(ssh_log_dir, exist_ok=True)
+    log_file = open(os.path.join(ssh_log_dir, "cowrie_stdout.log"), "ab", 0)
     env = {
         **os.environ,
         "COWRIE_DATA_DIR": os.path.join(cfg_dir, "data"),
@@ -99,7 +112,7 @@ def start_smb(config):
     return start_script(config, "enable_smb", "08_smb/smb_trap.py", "📁 SMB Trap", "smb", "smb_stdout.log")
 
 def start_dns(config):
-    return start_script(config, "enable_dns", "09_dns/dns_trap.py", "🌐 DNS Trap", "dns", "dns_stdout.log")
+    return start_script(config, "enable_dns", "09_dns/dns_trap.py", "🌐 DNS Trap", "dns", "dns_stdout.log", port_key="DNS_PORT")
 
 def start_sip(config):
     return start_script(config, "enable_sip", "10_sip/sip_trap.py", "📞 SIP Trap", "sip", "sip_stdout.log")
@@ -138,9 +151,16 @@ def start_features(config):
         except Exception as e:
             print(f"  ⚠️  Features: Log rotation failed: {e}")
     if is_enabled(config, "enable_geoip"):
-        started.append("🌍 GeoIP Tracking")
+        started.append("🌍 GeoIP Tracking (enriches dashboard.py on view)")
     if is_enabled(config, "enable_notifications") or config.get("general", "telegram_alerts", fallback="no").lower() == "yes":
-        started.append("🔔 Notifications")
+        try:
+            sys.path.insert(0, LAB_DIR)
+            import importlib
+            notif = importlib.import_module("features.notifications")
+            notif.start_background()
+            started.append("🔔 Notifications")
+        except Exception as e:
+            print(f"  ⚠️  Features: Notifications failed: {e}")
     return started
 
 def save_pids(processes):

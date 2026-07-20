@@ -13,7 +13,7 @@ Redis Honeypot — Captures unsecured Redis probes, key enumeration, and exploit
 """
 import os, sys, json, socket, datetime, threading
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "redis")
 os.makedirs(LOG_DIR, exist_ok=True)
 

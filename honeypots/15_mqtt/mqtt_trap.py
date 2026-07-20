@@ -9,8 +9,9 @@ if _sys.platform == "win32":
     except Exception:
         pass
 import os, sys, json, socket, datetime, threading
+import sys as _sys2; _sys2.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')); from alert_helper import log_alert
 
-LAB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+LAB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LOG_DIR = os.path.join(LAB_DIR, "logs", "mqtt")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -33,7 +34,8 @@ class MQTTTrap:
             conn.send(bytes([0x20, 0x02, 0x00, 0x00]))  # CONNACK
             entry = {"timestamp": ts, "source_ip": client_ip, "protocol": "MQTT", "packet_type": mtype, "topic": topic}
             with open(os.path.join(LOG_DIR, "mqtt_messages.jsonl"), "a", encoding="utf-8") as f: f.write(json.dumps(entry)+"\n")
-            print(f"  📡 MQTT | {ts[:19]} | {client_ip:>15} | {mtype} {topic}")
+            print(f"
+            log_alert("mqtt", client_ip, "connect")  📡 MQTT | {ts[:19]} | {client_ip:>15} | {mtype} {topic}")
         except: pass
         finally: conn.close()
     def start(self):
