@@ -23,6 +23,18 @@ logs/**/*.jsonl
 logs/**/*.csv
 logs/**/captured_files/*
 
+# Generated files
+analysis_report.json
+dashboard.py.b64
+notify_config.json
+alert_rules.json
+blacklist.json
+login.json
+schedule.json
+geoip_cache.json
+threat_intel_cache.json
+alerts.jsonl
+
 # IDE
 .vscode/
 .idea/
