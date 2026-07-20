@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Honeypot Lab — 17 Traps. One Hive. Real Attackers.</title>
-<meta name="description" content="A 17-honeypot cybersecurity lab with a live dashboard, GeoIP tracking, attack correlation, and red/blue team tools. Runs on Windows and Kali/Linux.">
+<title>Honeypot Lab — 17 Traps. 8 Pages. 12 Features. Real Attackers.</title>
+<meta name="description" content="A 17-honeypot cybersecurity lab with 8 dashboard pages, 12 built-in features, GeoIP tracking, attack correlation, PDF reports, and red/blue team tools. Runs on Windows and Kali/Linux.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,8 @@
       <a href="#quickstart">Quick Start</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#features">Features</a>
+      <a href="#pages">Pages</a>
+      <a href="#api">API</a>
       <a href="#tools">Red / Blue</a>
       <a href="#config">Config</a>
       <a href="#faq">FAQ</a>
@@ -58,9 +60,10 @@
       </div>
       <ul class="hero-stats">
         <li><strong>17</strong><span>honeypot types</span></li>
-        <li><strong>6</strong><span>analysis features</span></li>
+        <li><strong>12</strong><span>built-in features</span></li>
+        <li><strong>8</strong><span>dashboard pages</span></li>
+        <li><strong>25+</strong><span>API endpoints</span></li>
         <li><strong>2</strong><span>platforms</span></li>
-        <li><strong>1</strong><span>command to launch</span></li>
       </ul>
     </div>
 
@@ -142,17 +145,21 @@
       <h2 class="section-title">Watch the hive from the outside.</h2>
       <p class="section-sub">
         <code>python dashboard.py</code> starts a Flask dashboard at
-        <code>http://127.0.0.1:5000</code> — one stat card per honeypot,
-        recent activity tables, unique attacker counts, and a 5-second
-        auto-refresh. No build step, no separate frontend.
+        <code>http://127.0.0.1:5000</code> — 8 pages with GeoIP columns,
+        attack maps, timelines, statistics, settings, and 25+ API endpoints.
+        No build step, no separate frontend.
       </p>
       <table class="endpoint-table">
-        <thead><tr><th>Endpoint</th><th>Returns</th></tr></thead>
+        <thead><tr><th>Page</th><th>What It Shows</th></tr></thead>
         <tbody>
-          <tr><td><code>GET /api/stats</code></td><td>Live counts per honeypot + unique IPs</td></tr>
-          <tr><td><code>GET /api/logs/&lt;type&gt;?n=20</code></td><td>Last <em>n</em> log entries (max 100)</td></tr>
-          <tr><td><code>GET /heatmap</code></td><td>Hourly / daily activity heatmap (JSON)</td></tr>
-          <tr><td><code>GET /correlation</code></td><td>Attackers hitting multiple honeypots</td></tr>
+          <tr><td><code>/</code></td><td>Overview — live stats, GeoIP columns, all log tables</td></tr>
+          <tr><td><code>/heatmap</code></td><td>Hourly activity grid + events by type breakdown</td></tr>
+          <tr><td><code>/correlation</code></td><td>Multi-service attackers with service tags</td></tr>
+          <tr><td><code>/settings</code></td><td>API keys, notifications, feature toggles</td></tr>
+          <tr><td><code>/attack-map</code></td><td>SVG world map showing attacker locations</td></tr>
+          <tr><td><code>/timeline</code></td><td>Chronological attack view with type filters</td></tr>
+          <tr><td><code>/statistics</code></td><td>Bar charts, distribution, hourly activity</td></tr>
+          <tr><td><code>/api</code></td><td>25+ REST endpoint documentation</td></tr>
         </tbody>
       </table>
     </div>
@@ -164,18 +171,18 @@
         <span class="dash-mock-url">127.0.0.1:5000</span>
       </div>
       <div class="dash-mock-grid">
-        <div class="dash-mock-card"><span class="dm-icon">🐚</span><span class="dm-num">42</span><span class="dm-label">SSH</span></div>
-        <div class="dash-mock-card"><span class="dm-icon">🌐</span><span class="dm-num">118</span><span class="dm-label">Web</span></div>
-        <div class="dash-mock-card"><span class="dm-icon">🔑</span><span class="dm-num">27</span><span class="dm-label">Creds</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🐚</span><span class="dm-num">222</span><span class="dm-label">SSH</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🌐</span><span class="dm-num">8</span><span class="dm-label">Web</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🔑</span><span class="dm-num">1</span><span class="dm-label">Creds</span></div>
         <div class="dash-mock-card"><span class="dm-icon">🦠</span><span class="dm-num">3</span><span class="dm-label">Malware</span></div>
-        <div class="dash-mock-card"><span class="dm-icon">📟</span><span class="dm-num">96</span><span class="dm-label">Telnet</span></div>
-        <div class="dash-mock-card"><span class="dm-icon">🔴</span><span class="dm-num">14</span><span class="dm-label">Redis</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">🖥️</span><span class="dm-num">2</span><span class="dm-label">RDP</span></div>
+        <div class="dash-mock-card"><span class="dm-icon">📁</span><span class="dm-num">1</span><span class="dm-label">SMB</span></div>
       </div>
       <div class="dash-mock-table">
-        <div class="dm-row dm-head"><span>Time</span><span>IP</span><span>Event</span></div>
-        <div class="dm-row"><span>17:42:03</span><span>185.220.x.x</span><span>root:123456</span></div>
-        <div class="dm-row"><span>17:41:58</span><span>45.148.x.x</span><span>GET /wp-login.php</span></div>
-        <div class="dm-row"><span>17:41:51</span><span>103.75.x.x</span><span>EternalBlue probe</span></div>
+        <div class="dm-row dm-head"><span>Time</span><span>IP</span><span>Country</span><span>Event</span></div>
+        <div class="dm-row"><span>13:07:14</span><span>127.0.0.1</span><span>Local</span><span>New connection</span></div>
+        <div class="dm-row"><span>12:55:06</span><span>127.0.0.1</span><span>Local</span><span>Connection lost</span></div>
+        <div class="dm-row"><span>12:24:59</span><span>127.0.0.1</span><span>Local</span><span>GET /wp-login.php</span></div>
       </div>
     </div>
   </div>
@@ -184,10 +191,73 @@
 <!-- ============ FEATURES ============ -->
 <section class="features" id="features">
   <div class="section-inner">
-    <p class="eyebrow center">Beyond the traps</p>
+    <p class="eyebrow center">12 Built-in Features</p>
     <h2 class="section-title center">What happens after something bites.</h2>
 
     <div class="feature-grid">
+      <article class="feature-card">
+        <span class="feature-icon">📄</span>
+        <h3>PDF Report Export</h3>
+        <p>Download professional threat analysis reports with executive summary, breakdown, and recommendations.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🗺️</span>
+        <h3>Attack Map</h3>
+        <p>SVG world map showing attacker locations with tooltips, stats, and country breakdown.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🌙</span>
+        <h3>Dark/Light Theme</h3>
+        <p>Toggle between dark and light themes with persistent preference.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">⏱️</span>
+        <h3>Attack Timeline</h3>
+        <p>Chronological attack view with type filters — SSH, Web, Creds, Malware, RDP, SMB, DNS.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🚫</span>
+        <h3>IP Blacklist</h3>
+        <p>Add/remove blocked IP addresses via API to prevent unwanted traffic.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3>Real-time Updates</h3>
+        <p>Server-Sent Events for live dashboard updates without page refresh.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔐</span>
+        <h3>Dashboard Login</h3>
+        <p>Password protection for the dashboard with configurable credentials.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">📅</span>
+        <h3>Scheduled Reports</h3>
+        <p>Configure daily/weekly email reports with PDF or CSV attachments.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h3>Statistics Charts</h3>
+        <p>Bar charts, attack distribution, and hourly activity timeline visualization.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔬</span>
+        <h3>Malware Analysis</h3>
+        <p>Auto-hash captured files with MD5/SHA256 for threat intelligence.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">💾</span>
+        <h3>Backup/Restore</h3>
+        <p>Download/upload ZIP backups of all log data and configuration.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <h3>Custom Alert Rules</h3>
+        <p>Trigger alerts on custom conditions — event rates, IP counts, honeypot types.</p>
+      </article>
+    </div>
+
+    <div class="feature-grid" style="margin-top: 20px;">
       <article class="feature-card">
         <span class="feature-icon">🌍</span>
         <h3>GeoIP Tracking</h3>
@@ -217,6 +287,37 @@
         <span class="feature-icon">🛡️</span>
         <h3>Threat Intel Feeds</h3>
         <p>Optional AbuseIPDB, VirusTotal, Shodan, and GreyNoise enrichment for captured IPs.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ API ENDPOINTS ============ -->
+<section class="features" id="api">
+  <div class="section-inner">
+    <p class="eyebrow center">REST API</p>
+    <h2 class="section-title center">25+ endpoints for integration.</h2>
+
+    <div class="feature-grid">
+      <article class="feature-card">
+        <span class="feature-icon">📡</span>
+        <h3>Core Endpoints</h3>
+        <p><code>/api/stats</code> · <code>/api/logs/&lt;type&gt;</code> · <code>/api/alerts</code> · <code>/api/geoip/&lt;ip&gt;</code> · <code>/api/intel/&lt;ip&gt;</code></p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">📤</span>
+        <h3>Export Endpoints</h3>
+        <p><code>/api/export?format=json</code> · <code>/api/export?format=csv</code> · <code>/api/report/pdf</code></p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">💾</span>
+        <h3>Backup/Restore</h3>
+        <p><code>/api/backup</code> (ZIP download) · <code>/api/restore</code> (ZIP upload)</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">⚙️</span>
+        <h3>Management</h3>
+        <p><code>/api/blacklist</code> · <code>/api/rules</code> · <code>/api/malware/analyze</code> · <code>/api/schedule</code> · <code>/api/login</code></p>
       </article>
     </div>
   </div>
@@ -267,12 +368,13 @@ python features/correlation.py
       <p class="section-sub">
         Disable a honeypot you don't need, remap a port, or turn on a feature —
         <code>config.ini</code> is the single source of truth, and it's the
-        only file you edit for day-to-day use.
+        only file you edit for day-to-day use. Or use the <strong>Settings page</strong> in the dashboard.
       </p>
       <ul class="config-notes">
         <li><strong>Windows note —</strong> Cowrie's SSH config is synced from <code>config.ini</code>'s <code>ssh_port</code> automatically on every start.</li>
         <li><strong>Ports under 1024</strong> (like real port 22 or 53) need Administrator / <code>sudo</code>.</li>
         <li><strong>Local-only testing?</strong> Set <code>bind_host = 127.0.0.1</code> instead of <code>0.0.0.0</code>.</li>
+        <li><strong>WSL2 note —</strong> DNS uses port 5353 (port 53 is reserved by WSL2).</li>
       </ul>
     </div>
     <pre class="code-block code-block-lg"><code>[general]
@@ -286,11 +388,13 @@ enable_notifications = no
 [ports]
 ssh_port    = 2222   &#35; 22 needs admin
 smb_port    = 445
-dns_port    = 53
+dns_port    = 5353   &#35; WSL2 uses 53
 redis_port  = 6379
 &#35; ...all 17 ports configurable
 
 [features]
+abuseipdb_key =      &#35; Threat intel API keys
+virustotal_key =     &#35; Configure in Settings page
 log_max_size_mb    = 50
 log_retention_days = 30</code></pre>
   </div>
